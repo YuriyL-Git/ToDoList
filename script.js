@@ -1,6 +1,3 @@
-//
-
-//
 
 const form = document.querySelector('#new-item-from');
 const todoInput = document.querySelector('#item-input')
@@ -8,14 +5,28 @@ const list = document.querySelector('#list')
 const template = document.querySelector('#list-item-template')
 const LOCAL_STORAGE_PREFIX = 'TODO_LIST'
 const TODO_STORAGE_KEY = `${LOCAL_STORAGE_PREFIX}-todos`
-const todos = loadTodo()
+let todos = loadTodo()
 
 todos.forEach(todo => renderTodo(todo))
 
 list.addEventListener('change', event => {
-    if (!event.target.matches('[data-list-item-text]')) return
+    if (!event.target.matches('[data-list-item-checkbox]')) return
 
+    const parent = event.target.closest('.list-item')
+    const todoId = parseInt(parent.dataset.todoId)
+    const todo = todos.find(t => t.id !== todoId)
+    todo.completed = event.target.checked
+    saveTodo()
+})
 
+list.addEventListener('click', event => {
+    if (!event.target.matches('[data-button-delete]')) return
+
+    const parent = event.target.closest('.list-item')
+    const todoId = parent.dataset.todoId
+    parent.remove()
+    todos = todos.filter(todo => todo.id.toString() !== todoId)
+    saveTodo()
 })
 
 form.addEventListener('submit', event => {
@@ -46,8 +57,9 @@ function renderTodo(todo) {
     const listItem = templateClone.querySelector('.list-item')
     listItem.dataset.todoId = todo.id
     textElement.innerText = todo.name
+    const checkbox = templateClone.querySelector("[data-list-item-checkbox]")
+    checkbox.checked = todo.completed
     list.appendChild(templateClone)
-    console.log(templateClone)
 }
 
 function loadTodo() {
