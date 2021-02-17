@@ -16,5 +16,16 @@
     <button type="submit">Add Item</button>
 </form>
 
+<!--Template - html that is not rendered on the page-->
+<template id="list-item-template">
+    <li class="list-item">
+        <label class="list-item-label">
+            <input type="checkbox" data-list-item-checkbox>
+            <span data-list-item-text></span>
+        </label>
+        <button data-button-delete>Delete</button>
+    </li>
+</template>
+
 </body>
 </html>
